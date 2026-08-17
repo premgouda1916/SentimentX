@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SentimentX — Multilingual Sentiment Analysis</title>
+    <content="SentimentX: A Hybrid CNN-XLNet Framework for Multilingual Low-Resource Indian Language Sentiment Analysis.
+        Analyze text in Kannada, Malayalam, Hindi, Marathi, Telugu, and English.">
+        <!-- Google Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+            rel="stylesheet">
+        <!-- BoxIcons -->
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+        <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Animated Background -->
+    <div class="bg-grid"></div>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
+    <!-- Floating Particles -->
+    <div class="particles" id="particles"></div>
+
+    <div class="app-wrapper">
+        <!-- Header -->
+        <header class="app-header glassmorphism" id="app-header">
+            <div class="logo">
+                <div class="logo-icon-wrapper">
+                    <i class='bx bxs-brain'></i>
+                    <span class="pulse-ring"></span>
+                </div>
+                <div class="logo-text">
+                    <h1>SentimentX</h1>
+                    <span class="tagline">Hybrid CNN-XLNet · Multilingual Analysis</span>
+                </div>
+            </div>
+            <div class="header-badges">
+                <span class="badge"><i class='bx bx-globe'></i> 6 Languages</span>
+                <span class="badge"><i class='bx bx-chip'></i> CNN-XLNet</span>
+                <span class="badge live-badge"><span class="live-dot"></span> Live</span>
+            </div>
+        </header>
+
+        <!-- Main Content Grid -->
+        <div class="main-grid">
+            <!-- Left Panel: Input -->
+            <section class="panel input-panel glassmorphism" id="input-panel">
+                <div class="panel-header">
+                    <i class='bx bx-edit-alt'></i>
+                    <h2>Analyze Text</h2>
+                </div>
+
+                <div class="input-group">
+                    <label for="language">Language</label>
+                    <div class="select-wrapper">
+                        <select id="language">
+                            <option value="auto">🔍 Auto-Detect</option>
+                            <option value="kannada">🇮🇳 Kannada (ಕನ್ನಡ)</option>
+                            <option value="malayalam">🇮🇳 Malayalam (മലയാളം)</option>
+                            <option value="hindi">🇮🇳 Hindi (हिंदी)</option>
+                            <option value="marathi">🇮🇳 Marathi (मराठी)</option>
+                            <option value="telugu">🇮🇳 Telugu (తెలుగు)</option>
+                            <option value="english">🇬🇧 English</option>
+                        </select>
+                        <i class='bx bx-chevron-down'></i>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="text-input">Enter Text</label>
+                    <div class="textarea-wrapper">
+                        <textarea id="text-input"
+                            placeholder="Type or paste your text here…&#10;&#10;Examples:&#10;• ಈ ಉತ್ಪನ್ನ ತುಂಬಾ ಚೆನ್ನಾಗಿದೆ!&#10;• यह बहुत अच्छा है&#10;• This product is amazing! 😍"
+                            maxlength="1000"></textarea>
+                        <span class="char-count" id="char-count">0 / 1000</span>
+                    </div>
+                </div>
+
+                <button id="analyze-btn" class="analyze-btn">
+                    <span class="btn-content">
+                        <i class='bx bx-analyse'></i>
+                        <span>Analyze Sentiment</span>
+                    </span>
+                    <span class="btn-shimmer"></span>
+                </button>
+
+                <!-- Quick Examples -->
+                <div class="quick-examples">
+                    <span class="examples-label">Try:</span>
+                    <button class="example-chip" data-text="ನನಗೆ ತುಂಬಾ ಸಂತೋಷವಾಗಿದೆ!" data-lang="kannada">😊
+                        Kannada</button>
+                    <button class="example-chip" data-text="I'm so angry about this terrible service! 😡"
+                        data-lang="english">😡 Angry</button>
+                    <button class="example-chip" data-text="बहुत डरावना अनुभव था" data-lang="hindi">😨 Hindi</button>
+                    <button class="example-chip" data-text="Wow, I never expected this!" data-lang="english">😲
+                        Surprise</button>
+                </div>
+            </section>
+
+            <!-- Right Panel: Results -->
+            <section class="panel results-panel glassmorphism" id="results-panel">
+                <!-- Placeholder State -->
+                <div class="placeholder-state" id="placeholder-state">
+                    <div class="placeholder-icon">
+                        <i class='bx bx-message-square-dots'></i>
+                    </div>
+                    <h3>Ready to Analyze</h3>
+                    <p>Enter text on the left and click "Analyze Sentiment" to see AI-powered emotion detection results
+                        here.</p>
+                    <div class="supported-emotions">
+                        <span class="emotion-tag" style="--tag-color: var(--happiness)">😊 Happiness</span>
+                        <span class="emotion-tag" style="--tag-color: var(--sadness)">😢 Sadness</span>
+                        <span class="emotion-tag" style="--tag-color: var(--anger)">😡 Anger</span>
+                        <span class="emotion-tag" style="--tag-color: var(--fear)">😨 Fear</span>
+                        <span class="emotion-tag" style="--tag-color: var(--surprise)">😲 Surprise</span>
+                        <span class="emotion-tag" style="--tag-color: var(--disgust)">🤢 Disgust</span>
+                    </div>
+                </div>
+
+                <!-- Loading State -->
+                <div class="loading-state hidden" id="loading-state">
+                    <div class="neural-loader">
+                        <div class="neural-node n1"></div>
+                        <div class="neural-node n2"></div>
+                        <div class="neural-node n3"></div>
+                        <div class="neural-node n4"></div>
+                        <div class="neural-node n5"></div>
+                    </div>
+                    <p class="loading-text">Analyzing with CNN-XLNet…</p>
+                </div>
+
+                <!-- Result State -->
+                <div class="result-state hidden" id="result-state">
+                    <div class="result-hero">
+                        <div class="emotion-emoji" id="emotion-emoji">😊</div>
+                        <div class="emotion-info">
+                            <span class="emotion-detected-label">Detected Emotion</span>
+                            <h2 class="emotion-name" id="emotion-name">Happiness</h2>
+                        </div>
+                    </div>
+
+                    <!-- Confidence Arc -->
+                    <div class="confidence-section">
+                        <div class="confidence-ring-wrapper">
+                            <svg class="confidence-ring" viewBox="0 0 120 120">
+                                <circle class="ring-bg" cx="60" cy="60" r="52" />
+                                <circle class="ring-fill" id="ring-fill" cx="60" cy="60" r="52" />
+                            </svg>
+                            <div class="confidence-value" id="confidence-value">95.4%</div>
+                        </div>
+                        <span class="confidence-label">Confidence</span>
+                    </div>
+
+                    <!-- Probability Bars -->
+                    <div class="probability-section">
+                        <h4 class="section-title">Emotion Probabilities</h4>
+                        <div class="prob-bars" id="prob-bars">
+                            <!-- Dynamically populated -->
+                        </div>
+                    </div>
+
+                    <!-- Metadata -->
+                    <div class="result-meta">
+                        <div class="meta-item">
+                            <i class='bx bx-globe'></i>
+                            <span id="detected-language">Auto-Detect</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class='bx bx-time'></i>
+                            <span id="response-time">142ms</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class='bx bx-text'></i>
+                            <span id="text-length">24 chars</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- History Panel -->
+        <section class="panel history-panel glassmorphism" id="history-panel">
+            <div class="panel-header">
+                <i class='bx bx-history'></i>
+                <h2>Recent Analyses</h2>
+                <button class="clear-history-btn" id="clear-history" title="Clear history">
+                    <i class='bx bx-trash'></i>
+                </button>
+            </div>
+            <div class="history-list" id="history-list">
+                <div class="history-empty" id="history-empty">
+                    <i class='bx bx-ghost'></i>
+                    <span>No analyses yet</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <span>SentimentX &copy; 2026 · Hybrid CNN-XLNet Framework</span>
+            <span class="footer-dot">·</span>
+            <span>Built for Multilingual Indian Language Analysis</span>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
